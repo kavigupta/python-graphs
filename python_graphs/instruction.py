@@ -250,6 +250,8 @@ def get_writes_from_ast_node(ast_node):
 
 def create_writes(node, parent=None):
   # TODO(dbieber): Use a proper type instead of a tuple for accesses.
+  if isinstance(node, ast.arg):
+    return []
   if isinstance(node, ast.AST):
     return [
         ('write', n, parent) for n in ast.walk(node) if isinstance(n, ast.Name)
