@@ -640,6 +640,9 @@ class ControlFlowNode(object):
     """Gets the value of a label on the Instruction."""
     return self.labels[label]
 
+  def __repr__(self):
+    return f"<ControlFlowNode {str(self.instruction)}>"
+
 
 # pylint: disable=invalid-name,g-doc-return-or-yield,g-doc-args
 class ControlFlowVisitor(object):

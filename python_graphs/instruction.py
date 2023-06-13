@@ -396,3 +396,10 @@ class Instruction(object):
 
   def get_write_names(self):
     return {access_name(access) for access in self.get_writes()}
+
+  def __repr__(self):
+    return f"<Instruction {str(self)}>"
+
+  def __str__(self):
+    from .control_flow_graphviz import get_label_for_instruction
+    return f"{get_label_for_instruction(self)!r}@{self.node}"
