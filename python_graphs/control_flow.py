@@ -1282,7 +1282,7 @@ class ControlFlowVisitor(object):
       # handler.name is a Name, Tuple, or List AST node.
       self.add_new_instruction(
           handler_body_block,
-          handler.name,
+          handler,
           accesses=instruction_module.create_writes(handler.name, handler),
           source=instruction_module.EXCEPTION)
     handler_body_block = self.visit_list(handler.body, handler_body_block)
