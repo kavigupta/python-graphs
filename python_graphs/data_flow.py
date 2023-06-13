@@ -17,7 +17,7 @@
 import collections
 
 from absl import logging  # pylint: disable=unused-import
-import gast as ast
+import ast
 
 from python_graphs import control_flow
 from python_graphs import instruction as instruction_module

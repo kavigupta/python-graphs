@@ -58,7 +58,7 @@ The following are Instructions:
 13. TODO(dbieber): The base class (object) is an Instruction too.
 """
 
-import gast as ast
+import ast
 import six
 
 # Types of accesses:
@@ -166,7 +166,7 @@ class AccessVisitor(ast.NodeVisitor):
   """Visitor that computes an ordered list of accesses.
 
   Accesses are ordered based on a depth-first traversal of the AST, using the
-  order of fields defined in `gast`, except for Assign nodes, for which the RHS
+  order of fields defined in `ast`, except for Assign nodes, for which the RHS
   is ordered before the LHS.
 
   This may differ from Python execution semantics in two ways:

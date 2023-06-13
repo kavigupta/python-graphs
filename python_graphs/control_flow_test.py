@@ -18,7 +18,7 @@ import inspect
 
 from absl import logging  # pylint: disable=unused-import
 from absl.testing import absltest
-import gast as ast
+import ast
 from python_graphs import control_flow
 from python_graphs import control_flow_test_components as tc
 from python_graphs import instruction as instruction_module

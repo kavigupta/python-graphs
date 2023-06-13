@@ -27,7 +27,7 @@ import os
 from absl import logging
 import astunparse
 from astunparse import unparser
-import gast as ast
+import ast
 from python_graphs import control_flow
 from python_graphs import data_flow
 from python_graphs import instruction as instruction_module
@@ -569,7 +569,7 @@ def is_ast_node(node):
 
 
 def is_ast_edge(edge):
-  # TODO(charlessutton): Expand to enumerate edge types in gast.
+  # TODO(charlessutton): Expand to enumerate edge types in ast.
   return edge.type == pb.EdgeType.FIELD
 
 

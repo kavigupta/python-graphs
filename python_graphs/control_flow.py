@@ -18,7 +18,7 @@ import itertools
 import uuid
 
 from absl import logging  # pylint: disable=unused-import
-import gast as ast
+import ast
 from python_graphs import instruction as instruction_module
 from python_graphs import program_utils
 import six

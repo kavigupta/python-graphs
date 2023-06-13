@@ -29,7 +29,6 @@ A library for generating graph representations of Python programs.""".strip()
 DEPENDENCIES = [
     'absl-py',
     'astunparse',
-    'gast',
     'networkx',
     'pygraphviz',
     'six',

@@ -17,7 +17,7 @@
 Computes properties such as the height of a program graph's AST.
 """
 
-import gast as ast
+import ast
 import networkx as nx
 
 

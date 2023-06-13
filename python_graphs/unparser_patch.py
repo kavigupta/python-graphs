@@ -1,5 +1,5 @@
 import astunparse
-import gast as ast
+import ast
 
 
 astunparse.Unparser.boolops = {'And': 'and', 'Or': 'or', ast.And: 'and', ast.Or: 'or'}
@@ -57,7 +57,7 @@ def _arguments(self, t):
             if t.kwarg.annotation:
                 self.write(": ")
                 self.dispatch(t.kwarg.annotation)
-        elif hasattr(t.kwarg, 'id'):  # if this is a gast._arguments
+        elif hasattr(t.kwarg, 'id'):  # if this is a ast._arguments
             self.write("**"+t.kwarg.id)
             if t.kwarg.annotation:
                 self.write(": ")

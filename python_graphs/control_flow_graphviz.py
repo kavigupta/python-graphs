@@ -16,7 +16,7 @@
 
 from absl import logging  # pylint: disable=unused-import
 import astunparse
-import gast as ast
+import ast
 import pygraphviz
 
 LEFT_ALIGN = '\l'  # pylint: disable=anomalous-backslash-in-string

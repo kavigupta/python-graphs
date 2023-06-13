@@ -20,7 +20,7 @@ import time
 
 from absl import logging
 from absl.testing import absltest
-import gast as ast
+import ast
 
 from python_graphs import control_flow_test_components as cftc
 from python_graphs import program_graph

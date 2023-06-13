@@ -15,7 +15,7 @@
 """Tests for instruction module."""
 
 from absl.testing import absltest
-import gast as ast
+import ast
 from python_graphs import instruction as instruction_module
 
 

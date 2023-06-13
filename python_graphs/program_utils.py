@@ -18,7 +18,7 @@ import inspect
 import textwrap
 import uuid
 
-import gast as ast
+import ast
 import six
 
 

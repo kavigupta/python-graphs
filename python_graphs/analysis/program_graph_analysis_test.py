@@ -15,7 +15,7 @@
 """Tests for program_graph_analysis.py."""
 
 from absl.testing import absltest
-import gast as ast
+import ast
 import networkx as nx
 
 from python_graphs import program_graph
