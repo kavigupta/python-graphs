@@ -85,14 +85,12 @@ INSTRUCTION_AST_NODES = (
     ast.Assign,  # assignment_stmt
     ast.AugAssign,  # augmented_assignment_stmt
     ast.Delete,  # del_stmt
-    ast.Print,  # print_stmt
     ast.Return,  # return_stmt
     # ast.Yield,  # yield_stmt. ast.Yield nodes are contained in ast.Expr nodes.
     ast.Raise,  # raise_stmt
     ast.Import,  # import_stmt
     ast.ImportFrom,
     ast.Global,  # global_stmt
-    ast.Exec,  # exec_stmt
 )
 
 # https://docs.python.org/2/reference/simple_stmts.html
