@@ -73,7 +73,8 @@ class ControlFlowGraph(object):
   def get_enter_blocks(self):
     """Returns entry blocks for all functions."""
     return six.moves.filter(
-        lambda block: block.label.startswith('<entry:'), self.blocks)
+        lambda block: block.label is not None and block.label.startswith('<entry:'),
+        self.blocks)
 
   def get_enter_control_flow_nodes(self):
     """Yields all ControlFlowNodes without any prev nodes."""
