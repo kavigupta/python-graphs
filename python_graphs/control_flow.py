@@ -1111,9 +1111,9 @@ class ControlFlowVisitor(object):
         node.target,
         accesses=instruction_module.create_writes(node.target, node),
         source=instruction_module.ITERATOR)
-    return self.handle_Loop(node, target, current_block)
+    return self.handle_Loop(node, target, current_block, exit_strategy="start_end")
 
-  def handle_Loop(self, node, loop_instruction, current_block):
+  def handle_Loop(self, node, loop_instruction, current_block, exit_strategy="test"):
     """A helper fn for For and While.
 
     Args:
@@ -1121,6 +1121,13 @@ class ControlFlowVisitor(object):
       loop_instruction: The Instruction in the loop header, such as a test or an
         assignment from an iterator.
       current_block: The BasicBlock containing the loop.
+      exit_strategy: The strategy for exiting the loop. Either "test" or
+        "start_end". While loops exit via their test condition, which is
+        simpler and has fewer edges. For loops cannot exit via their test
+        since their test node assigns a variable, which does not happen
+        when the iterable is exhausted. Instead, we add an exit from the
+        iterable evalution node, as well as an exit from the bottom of the
+        body of the loop.
 
     Blocks:
       current_block: This is where the loop resides.
@@ -1146,15 +1153,22 @@ class ControlFlowVisitor(object):
     body_block.add_exit(test_block)
     self.exit_frame()
 
+    exiting_from = dict(
+      test=[test_block],
+      start_end=[current_block, body_block]
+    )[exit_strategy]
+
     # If a loop exits via its test (rather than via a break) and it has
     # an orelse, then it enters the orelse.
     if node.orelse:
       else_block = self.new_block(node=node, label='else_block')
-      test_block.add_exit(else_block, branch=False)
+      for b in exiting_from:
+        b.add_exit(else_block, branch=False)
       else_block = self.visit_list(node.orelse, else_block)
       else_block.add_exit(after_block)
     else:
-      test_block.add_exit(after_block, branch=False)
+      for b in exiting_from:
+        b.add_exit(after_block, branch=False)
 
     self.graph.move_block_to_rear(after_block)
     return after_block
