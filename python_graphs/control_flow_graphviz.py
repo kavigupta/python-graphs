@@ -52,6 +52,8 @@ def write_as_str(write):
 
 
 def get_label_for_instruction(instruction):
+  if instruction.label is not None:
+    return instruction.label
   if instruction.source is not None:
     line = ', '.join(write for write in instruction.get_write_names())
     line += ' <- ' + instruction.source

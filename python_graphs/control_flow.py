@@ -1107,13 +1107,20 @@ class ControlFlowVisitor(object):
     self.add_new_instruction(current_block, node.iter)
     # node.target is a Name, Tuple, or List node.
     # We wrap it in an Instruction so it knows where its write is coming from.
+    for_block = self.new_block(node=node, label='for_block')
+    for_instruction = instruction_module.Instruction(
+        node,
+        accesses=[],
+        label='<for>')
+    self.add_instruction(for_block, for_instruction)
+    current_block.add_exit(for_block)
     target = instruction_module.Instruction(
         node.target,
         accesses=instruction_module.create_writes(node.target, node),
         source=instruction_module.ITERATOR)
-    return self.handle_Loop(node, target, current_block, exit_strategy="start_end")
+    return self.handle_Loop(node, target, for_block, loop_start=for_block)
 
-  def handle_Loop(self, node, loop_instruction, current_block, exit_strategy="test"):
+  def handle_Loop(self, node, loop_instruction, current_block, loop_start=None):
     """A helper fn for For and While.
 
     Args:
@@ -1121,13 +1128,10 @@ class ControlFlowVisitor(object):
       loop_instruction: The Instruction in the loop header, such as a test or an
         assignment from an iterator.
       current_block: The BasicBlock containing the loop.
-      exit_strategy: The strategy for exiting the loop. Either "test" or
-        "start_end". While loops exit via their test condition, which is
-        simpler and has fewer edges. For loops cannot exit via their test
-        since their test node assigns a variable, which does not happen
-        when the iterable is exhausted. Instead, we add an exit from the
-        iterable evalution node, as well as an exit from the bottom of the
-        body of the loop.
+      loop_start: The BasicBlock where the loop starts. This is the same as
+        test_block (not yet defined, so passed as None) for a While loop, but
+        is a custom node for a For loop.
+
 
     Blocks:
       current_block: This is where the loop resides.
@@ -1141,6 +1145,8 @@ class ControlFlowVisitor(object):
     """
     # We do not add an instruction for the ast.For or ast.While node.
     test_block = self.new_block(node=node, label='test_block')
+    loop_start = loop_start if loop_start is not None else test_block
+
     current_block.add_exit(test_block)
     self.add_instruction(test_block, loop_instruction)
     body_block = self.new_block(node=node, label='body_block')
@@ -1150,25 +1156,19 @@ class ControlFlowVisitor(object):
     # In the loop, continue goes to test_block and break goes to after_block.
     self.enter_loop_frame(test_block, after_block)
     body_block = self.visit_list(node.body, body_block)
-    body_block.add_exit(test_block)
+    body_block.add_exit(loop_start)
     self.exit_frame()
 
-    exiting_from = dict(
-      test=[test_block],
-      start_end=[current_block, body_block]
-    )[exit_strategy]
 
     # If a loop exits via its test (rather than via a break) and it has
     # an orelse, then it enters the orelse.
     if node.orelse:
       else_block = self.new_block(node=node, label='else_block')
-      for b in exiting_from:
-        b.add_exit(else_block, branch=False)
+      loop_start.add_exit(else_block, branch=False)
       else_block = self.visit_list(node.orelse, else_block)
       else_block.add_exit(after_block)
     else:
-      for b in exiting_from:
-        b.add_exit(after_block, branch=False)
+      loop_start.add_exit(after_block, branch=False)
 
     self.graph.move_block_to_rear(after_block)
     return after_block

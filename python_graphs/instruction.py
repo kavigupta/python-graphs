@@ -354,10 +354,13 @@ class Instruction(object):
         being assigned a value from an iterator. When source is not None, the
         Python code corresponding to the instruction does not coincide with the
         Python code corresponding to the instruction's node.
+    label: (optional) the label for the instruction in the control flow
+      graph if the node used to represent the instruction is too large
+      to meaningfully express what is going on in the instruction in a graph.
   """
   # pyformat:enable
 
-  def __init__(self, node, accesses=None, source=None):
+  def __init__(self, node, accesses=None, source=None, label=None):
     if not isinstance(node, ast.AST):
       raise TypeError('node must be an instance of ast.AST.', node)
     self.node = node
@@ -365,6 +368,7 @@ class Instruction(object):
       accesses = get_accesses_from_ast_node(node)
     self.accesses = accesses
     self.source = source
+    self.label = label
 
   def contains_subprogram(self, node):
     """Whether this Instruction contains the given AST as a subprogram.
