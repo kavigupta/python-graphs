@@ -30,7 +30,7 @@ DEPENDENCIES = [
     'absl-py',
     'astunparse',
     'networkx',
-    'pygraphviz',
+    # 'pygraphviz', # only useful for visualization
     'six',
 ]
 
