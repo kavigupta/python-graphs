@@ -210,6 +210,40 @@ class AccessVisitor(ast.NodeVisitor):
     # Add the write access as normal.
     self.visit(node.target)
 
+  def visit_Lambda(self, node):
+    """Visit a Lambda, which contains reads of its arguments."""
+    for arg in node.args.args:
+      self.visit(arg)
+    # The body of a lambda is not visited, since it is not part of the
+    # instruction.
+
+  def visit_comprehension_generic(self, node):
+    """Visit a comprehension, which contains reads of its generators."""
+    for generator in node.generators:
+      self.visit(generator)
+    # The elt/key/value of a comp is not visited, since it is not part of the
+    # instruction.
+
+  def visit_comprehension(self, node):
+    """Visit a comprehension, which contains reads of its generators."""
+    self.visit(node.iter)
+
+  def visit_ListComp(self, node):
+    """Visit a ListComp, which contains reads of its generators."""
+    self.visit_comprehension_generic(node)
+
+  def visit_SetComp(self, node):
+    """Visit a SetComp, which contains reads of its generators."""
+    self.visit_comprehension_generic(node)
+
+  def visit_DictComp(self, node):
+    """Visit a DictComp, which contains reads of its generators."""
+    self.visit_comprehension_generic(node)
+
+  def visit_GeneratorExp(self, node):
+    """Visit a GeneratorExp, which contains reads of its generators."""
+    self.visit_comprehension_generic(node)
+
 
 def get_accesses_from_ast_node(node):
   """Get all accesses for an AST node, in depth-first AST field order."""
