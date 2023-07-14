@@ -189,6 +189,12 @@ class AccessVisitor(ast.NodeVisitor):
   def __init__(self):
     self.accesses = []
 
+  def visit_Import(self, node):
+    self.accesses.extend(("write", name, None) for name in node.names)
+
+  def visit_ImportFrom(self, node):
+    self.accesses.extend(("write", name, None) for name in node.names)
+
   def visit_Name(self, node):
     """Visit a Name, adding it to the list of accesses."""
     self.accesses.append(node)
