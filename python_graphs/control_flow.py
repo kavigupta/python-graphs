@@ -1362,7 +1362,6 @@ class ControlFlowVisitor(object):
     loop_frame = frames[-1]
 
     continue_block = loop_frame.blocks['continue_block']
-    print(continue_block.control_flow_nodes)
     return self.handle_ExitStatement(node,
                                      continue_block,
                                      try_finally_frames,
