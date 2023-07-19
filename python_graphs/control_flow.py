@@ -1154,7 +1154,7 @@ class ControlFlowVisitor(object):
 
     test_block.add_exit(body_block, branch=True)
     # In the loop, continue goes to test_block and break goes to after_block.
-    self.enter_loop_frame(test_block, after_block)
+    self.enter_loop_frame(loop_start, after_block)
     body_block = self.visit_list(node.body, body_block)
     body_block.add_exit(loop_start)
     self.exit_frame()
@@ -1362,6 +1362,7 @@ class ControlFlowVisitor(object):
     loop_frame = frames[-1]
 
     continue_block = loop_frame.blocks['continue_block']
+    print(continue_block.control_flow_nodes)
     return self.handle_ExitStatement(node,
                                      continue_block,
                                      try_finally_frames,
