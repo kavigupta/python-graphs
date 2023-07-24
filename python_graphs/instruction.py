@@ -66,8 +66,9 @@ READ = 'read'
 WRITE = 'write'
 
 # Context lists
-WRITE_CONTEXTS = (ast.Store, ast.Del, ast.Param, ast.AugStore)
+WRITE_CONTEXTS = (ast.Store, ast.Param, ast.AugStore)
 READ_CONTEXTS = (ast.Load, ast.AugLoad)
+DEL_CONTEXTS = (ast.Del,)
 
 # Sources of implicit writes:
 CLASS = 'class'
@@ -287,6 +288,20 @@ def get_writes_from_ast_node(ast_node):
       if access_is_write(access)
   ]
 
+def get_dels_from_ast_node(ast_node):
+  """Get all deletes for an AST node, in depth-first AST field order.
+
+  Args:
+    ast_node: The AST node of interest.
+
+  Returns:
+    A list of deletes performed by that AST node.
+  """
+  return [
+      access for access in get_accesses_from_ast_node(ast_node)
+      if access_is_del(access)
+  ]
+
 
 def create_writes(node, parent=None):
   # TODO(dbieber): Use a proper type instead of a tuple for accesses.
@@ -307,6 +322,12 @@ def access_is_read(access):
   else:
     return access[0] == 'read'
 
+def access_is_del(access):
+  if isinstance(access, ast.AST):
+    assert isinstance(access, ast.Name), access
+    return isinstance(access.ctx, DEL_CONTEXTS)
+  else:
+    return access[0] == 'del'
 
 def access_is_write(access):
   if isinstance(access, ast.AST):
@@ -332,6 +353,8 @@ def access_kind(access):
     return 'read'
   elif access_is_write(access):
     return 'write'
+  elif access_is_del(access):
+    return 'del'
 
 
 def access_kind_and_name(access):
@@ -442,6 +465,12 @@ class Instruction(object):
 
   def get_write_names(self):
     return {access_name(access) for access in self.get_writes()}
+
+  def get_dels(self):
+    return {access for access in self.accesses if access_is_del(access)}
+
+  def get_del_names(self):
+    return {access_name(access) for access in self.get_dels()}
 
   def __repr__(self):
     return f"<Instruction {str(self)}>"
