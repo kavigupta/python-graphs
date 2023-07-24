@@ -37,7 +37,7 @@ DEPENDENCIES = [
 TEST_DEPENDENCIES = [
 ]
 
-VERSION = '1.4.4'
+VERSION = '1.4.5'
 URL = 'https://github.com/google-research/python-graphs'
 
 setup(

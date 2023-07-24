@@ -1063,6 +1063,16 @@ class ControlFlowVisitor(object):
           source=instruction_module.ARGS)
     return current_block
 
+  def visit_With(self, node, current_block):
+    """Visit a With block.
+
+    Ignores the special behavior of the with block.
+    """
+    for withitem in node.items:
+      self.add_new_instruction(current_block, withitem)
+    current_block = self.visit_list(node.body, current_block)
+    return current_block
+
   def visit_If(self, node, current_block):
     """Visit an If node of the AST.
 
