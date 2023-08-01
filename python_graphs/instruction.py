@@ -84,6 +84,7 @@ INSTRUCTION_AST_NODES = (
     ast.Expr,  # expression_stmt
     ast.Assert,  # assert_stmt
     ast.Assign,  # assignment_stmt
+    ast.AnnAssign,  # assignment_stmt with annotation
     ast.AugAssign,  # augmented_assignment_stmt
     ast.Delete,  # del_stmt
     ast.Return,  # return_stmt
@@ -205,6 +206,11 @@ class AccessVisitor(ast.NodeVisitor):
     self.visit(node.value)
     for target in node.targets:
       self.visit(target)
+
+  def visit_AnnAssign(self, node):
+    """Visit an Assign, ordering RHS accesses before LHS accesses."""
+    self.visit(node.value)
+    self.visit(node.target)
 
   def visit_AugAssign(self, node):
     """Visit an AugAssign, which contains both a read and a write."""
