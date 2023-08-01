@@ -209,7 +209,8 @@ class AccessVisitor(ast.NodeVisitor):
 
   def visit_AnnAssign(self, node):
     """Visit an Assign, ordering RHS accesses before LHS accesses."""
-    self.visit(node.value)
+    if node.value is not None:
+      self.visit(node.value)
     self.visit(node.target)
 
   def visit_AugAssign(self, node):
