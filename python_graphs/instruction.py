@@ -228,6 +228,10 @@ class AccessVisitor(ast.NodeVisitor):
     """Visit a Lambda, which contains reads of its arguments."""
     for arg in node.args.args:
       self.visit(arg)
+    for default in node.args.defaults:
+      self.visit(default)
+    for kwdefault in node.args.kw_defaults:
+      self.visit(kwdefault)
     # The body of a lambda is not visited, since it is not part of the
     # instruction.
 
