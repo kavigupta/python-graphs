@@ -17,7 +17,6 @@
 from absl import logging  # pylint: disable=unused-import
 import astunparse
 import ast
-import pygraphviz
 
 LEFT_ALIGN = '\l'  # pylint: disable=anomalous-backslash-in-string
 
@@ -76,6 +75,8 @@ def get_label(block):
 
 def to_graphviz(graph, include_src=None):
   """To graphviz."""
+  import pygraphviz
+
   g = pygraphviz.AGraph(strict=False, directed=True)
   for block in graph.blocks:
     node_attrs = {}

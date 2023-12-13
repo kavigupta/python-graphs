@@ -15,7 +15,6 @@
 """Graphviz visualizations of Program Graphs."""
 
 from absl import logging  # pylint: disable=unused-import
-import pygraphviz
 from python_graphs import program_graph_dataclasses as pb
 import six
 
@@ -28,6 +27,7 @@ def to_graphviz(graph):
   Returns:
     A pygraphviz object representing the ProgramGraph.
   """
+  import pygraphviz
   g = pygraphviz.AGraph(strict=False, directed=True)
   for unused_key, node in graph.nodes.items():
     node_attrs = {}
